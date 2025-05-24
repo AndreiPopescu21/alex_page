@@ -33,9 +33,14 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.plot-wrapper {
+  overflow-x: hidden;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .plot {
   background: #222;
-  margin: 0 auto;
   display: block;
 }
 
