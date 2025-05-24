@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+// Number of nucleotides to generate during base calling
+const NUCLEOTIDE_COUNT = 100;
+
 function randomBase() {
   const bases = ['A', 'T', 'C', 'G'];
   return bases[Math.floor(Math.random() * bases.length)];
@@ -188,9 +191,9 @@ function App() {
     let i = 0;
     const timer = setInterval(() => {
       setSequence((seq) => seq + randomBase());
-      setWindowIndex(i);
+      setWindowIndex(Math.min(i, data.length - 1));
       i += 1;
-      if (i >= data.length) {
+      if (i >= NUCLEOTIDE_COUNT) {
         clearInterval(timer);
         setCalling(false);
         setWindowIndex(-1);
