@@ -51,7 +51,7 @@ function SignalPlot({ data, windowIndex }) {
   return (
     <div className="plot-wrapper">
       <svg
-        width="100%"
+        width={svgWidth}
         height={svgHeight}
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className="plot"
