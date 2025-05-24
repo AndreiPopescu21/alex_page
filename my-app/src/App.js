@@ -191,7 +191,12 @@ function App() {
     let i = 0;
     const timer = setInterval(() => {
       setSequence((seq) => seq + randomBase());
-      setWindowIndex(Math.min(i, data.length - 1));
+
+      const progress =
+        NUCLEOTIDE_COUNT > 1 ? i / (NUCLEOTIDE_COUNT - 1) : 1;
+      const idx = Math.round(progress * (data.length - 1));
+      setWindowIndex(Math.min(idx, data.length - 1));
+
       i += 1;
       if (i >= NUCLEOTIDE_COUNT) {
         clearInterval(timer);
