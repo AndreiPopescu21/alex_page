@@ -210,7 +210,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Nanopore Signal Viewer</h1>
+      <h1>Décodage de l'ADN</h1>
       <div className="controls">
         <input type="file" accept=".csv" onChange={handleFile} />
         <button onClick={startBaseCalling} disabled={calling || !data.length}>
