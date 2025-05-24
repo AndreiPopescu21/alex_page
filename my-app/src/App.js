@@ -49,9 +49,12 @@ function App() {
     reader.onload = (ev) => {
       const text = ev.target.result.trim();
       const lines = text.split(/\r?\n/);
-      const values = lines.map((line, idx) => {
+      const values = [];
+      lines.forEach((line) => {
         const val = parseFloat(line.split(',')[0]);
-        return { x: idx, y: val };
+        if (!isNaN(val)) {
+          values.push({ x: values.length, y: val });
+        }
       });
       setData(values);
     };
