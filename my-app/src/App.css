@@ -34,9 +34,9 @@ button:disabled {
 }
 
 .plot-wrapper {
-  overflow-x: auto;
+  overflow-x: hidden;
   margin: 0 auto;
-  width: fit-content;
+  width: 100%;
 }
 
 .plot {

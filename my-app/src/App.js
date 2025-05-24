@@ -10,8 +10,8 @@ function SignalPlot({ data, windowIndex }) {
   if (!data.length)
     return <div className="placeholder">Upload a CSV file to see the signal</div>;
 
-  const margin = { top: 10, right: 20, bottom: 30, left: 40 };
-  const svgHeight = 300;
+  const margin = { top: 10, right: 20, bottom: 40, left: 50 };
+  const svgHeight = 320;
   const svgWidth = Math.max(data.length * 2 + margin.left + margin.right, 700);
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -50,7 +50,12 @@ function SignalPlot({ data, windowIndex }) {
 
   return (
     <div className="plot-wrapper">
-      <svg width={svgWidth} height={svgHeight} className="plot">
+      <svg
+        width="100%"
+        height={svgHeight}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        className="plot"
+      >
         {/* axes */}
         <line
           x1={margin.left}
@@ -108,6 +113,27 @@ function SignalPlot({ data, windowIndex }) {
             </text>
           </g>
         ))}
+
+        {/* axis labels */}
+        <text
+          x={margin.left + width / 2}
+          y={svgHeight - 5}
+          textAnchor="middle"
+          fontSize="12"
+          fill="#fff"
+        >
+          Time (ms)
+        </text>
+        <text
+          x={15}
+          y={margin.top + height / 2}
+          textAnchor="middle"
+          fontSize="12"
+          fill="#fff"
+          transform={`rotate(-90 15 ${margin.top + height / 2})`}
+        >
+          Current (nA)
+        </text>
 
         <polyline
           points={points}
