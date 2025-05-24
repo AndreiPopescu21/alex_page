@@ -7,32 +7,125 @@ function randomBase() {
 }
 
 function SignalPlot({ data, windowIndex }) {
-  if (!data.length) return <div className="placeholder">Upload a CSV file to see the signal</div>;
-  const width = 700;
-  const height = 300;
-  const maxY = Math.max(...data.map(d => d.y));
-  const minY = Math.min(...data.map(d => d.y));
+  if (!data.length)
+    return <div className="placeholder">Upload a CSV file to see the signal</div>;
+
+  const margin = { top: 10, right: 20, bottom: 30, left: 40 };
+  const svgHeight = 300;
+  const svgWidth = Math.max(data.length * 2 + margin.left + margin.right, 700);
+  const height = svgHeight - margin.top - margin.bottom;
+  const width = svgWidth - margin.left - margin.right;
+
+  const maxY = Math.max(...data.map((d) => d.y));
+  const minY = Math.min(...data.map((d) => d.y));
   const scaleX = width / (data.length - 1);
   const scaleY = height / (maxY - minY || 1);
+
   const points = data
-    .map((d, i) => `${i * scaleX},${height - (d.y - minY) * scaleY}`)
-    .join(' ');
+    .map(
+      (d, i) =>
+        `${margin.left + i * scaleX},${
+          margin.top + height - (d.y - minY) * scaleY
+        }`
+    )
+    .join(" ");
+
   const windowWidth = 10 * scaleX;
-  const rectX = Math.max(0, windowIndex * scaleX - windowWidth / 2);
+  const rectX = margin.left + Math.max(0, windowIndex * scaleX - windowWidth / 2);
+
+  const ticksY = 5;
+  const ticksX = 5;
+
+  const yTicks = Array.from({ length: ticksY + 1 }, (_, i) => {
+    const value = minY + (i * (maxY - minY)) / ticksY;
+    const y = margin.top + height - (value - minY) * scaleY;
+    return { value, y };
+  });
+
+  const xTicks = Array.from({ length: ticksX + 1 }, (_, i) => {
+    const index = (i * (data.length - 1)) / ticksX;
+    const x = margin.left + index * scaleX;
+    return { value: Math.round(index), x };
+  });
 
   return (
-    <svg width={width} height={height} className="plot">
-      <polyline points={points} fill="none" stroke="#61dafb" strokeWidth="2" />
-      {windowIndex >= 0 && (
-        <rect
-          x={rectX}
-          y={0}
-          width={windowWidth}
-          height={height}
-          fill="rgba(255, 99, 132, 0.3)"
+    <div className="plot-wrapper">
+      <svg width={svgWidth} height={svgHeight} className="plot">
+        {/* axes */}
+        <line
+          x1={margin.left}
+          y1={margin.top + height}
+          x2={margin.left + width}
+          y2={margin.top + height}
+          stroke="#fff"
         />
-      )}
-    </svg>
+        <line
+          x1={margin.left}
+          y1={margin.top}
+          x2={margin.left}
+          y2={margin.top + height}
+          stroke="#fff"
+        />
+
+        {yTicks.map((t, idx) => (
+          <g key={`ytick-${idx}`}>
+            <line
+              x1={margin.left - 5}
+              x2={margin.left}
+              y1={t.y}
+              y2={t.y}
+              stroke="#fff"
+            />
+            <text
+              x={margin.left - 7}
+              y={t.y + 4}
+              textAnchor="end"
+              fontSize="10"
+              fill="#fff"
+            >
+              {t.value.toFixed(2)}
+            </text>
+          </g>
+        ))}
+
+        {xTicks.map((t, idx) => (
+          <g key={`xtick-${idx}`}>
+            <line
+              y1={margin.top + height}
+              y2={margin.top + height + 5}
+              x1={t.x}
+              x2={t.x}
+              stroke="#fff"
+            />
+            <text
+              x={t.x}
+              y={margin.top + height + 15}
+              textAnchor="middle"
+              fontSize="10"
+              fill="#fff"
+            >
+              {t.value}
+            </text>
+          </g>
+        ))}
+
+        <polyline
+          points={points}
+          fill="none"
+          stroke="#61dafb"
+          strokeWidth="2"
+        />
+        {windowIndex >= 0 && (
+          <rect
+            x={rectX}
+            y={margin.top}
+            width={windowWidth}
+            height={height}
+            fill="rgba(255, 99, 132, 0.3)"
+          />
+        )}
+      </svg>
+    </div>
   );
 }
 
